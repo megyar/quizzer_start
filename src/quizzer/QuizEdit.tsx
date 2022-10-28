@@ -6,28 +6,32 @@ import { QuestionEdit } from "./QuestionEdit";
 
 import "./QuizEdit.css";
 
-export const QuizEdit = ({
+export function QuizEdit ({
     quiz,
     editQuiz,
     deleteQuiz,
     switchEdit,
-    resetView
-}: {) => {
+    resetQuizView
+}: { quiz: Quiz,
+    editQuiz: (qId: number, newQuiz: Quiz) => void,
+    deleteQuiz: (qId: number) => void,
+    switchEdit: () => void,
+    resetQuizView: () => void,
+
+}): JSX.Element {
     const [newQuiz, setNewQuiz] = useState<Quiz>({ ...quiz });
 
     const editQuestion = (questionId: number, newQuestion: Question) => {
         setNewQuiz({
             ...newQuiz,
-            questionList: newQuiz.questionList.map(
-            )
+            questionList: newQuiz.questionList.map((question: Question): Question => questionId === question.id ? {...newQuestion} : question)
         });
     };
 
     const removeQuestion = (questionId: number) => {
         setNewQuiz({
             ...newQuiz,
-            questionList: newQuiz.questionList.filter(
-            )
+            questionList: newQuiz.questionList.filter((question: Question): boolean => questionId !== question.id)
         });
     };
 
@@ -36,15 +40,12 @@ export const QuizEdit = ({
     };
 
     const swapQuestion = (idx1: number, idx2: number) => {
+        const question1 = newQuiz.questionList[idx1];
+        const question2 = newQuiz.questionList[idx2];
         setNewQuiz({
             ...newQuiz,
             questionList: newQuiz.questionList.map(
-                (q: Question, idx: number): Question => {
-                    if (idx === idx1) return newQuiz.questionList[idx2];
-                    if (idx === idx2) return newQuiz.questionList[idx1];
-                    return;
-                }
-            )
+                (idx) => idx === question1 ? idx = question2 : idx === question2 ? idx = question1 : idx)
         });
     };
 
@@ -79,7 +80,7 @@ export const QuizEdit = ({
                             ) => {
                                 setNewQuiz({
                                     ...newQuiz,
-                                    published: 
+                                    published: !newQuiz.published
                                 });
                             }}
                         ></Form.Check>
@@ -154,7 +155,7 @@ export const QuizEdit = ({
                         variant="danger"
                         onClick={() => {
                             deleteQuiz(quiz.id);
-                            resetView();
+                            resetQuizView();
                         }}
                     >
                         Delete Quiz
