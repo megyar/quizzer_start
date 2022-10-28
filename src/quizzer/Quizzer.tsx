@@ -53,11 +53,11 @@ export const Quizzer = () => {
                 quizzes={quizzes}
                 editQuiz={editQuiz}
                 deleteQuiz={deleteQuiz}
-                showModal={handleShowModal}
+                handleShowModal={handleShowModal}
             ></QuizList>
             <AddQuizModal
                 show={showAddModal}
-                handleClose={handleCloseModal}
+                handleCloseModal={handleCloseModal}
                 addQuiz={addQuiz}
             ></AddQuizModal>
             <hr />

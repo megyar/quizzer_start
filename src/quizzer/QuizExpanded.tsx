@@ -6,12 +6,17 @@ import { Quiz } from "../interfaces/quiz";
 import "./QuizExpanded.css";
 import { QuizQuestion } from "./QuizQuestion";
 
-export const QuizExpanded = ({
+export function QuizExpanded ({
     quiz,
     editQuiz,
-    resetView,
+    resetQuizView,
     switchEdit
-}: {}) => {
+}: {
+    quiz: Quiz,
+    editQuiz: (qId: number, newQuiz: Quiz) => void,
+    resetQuizView:() => void,
+    switchEdit: () => void
+}): JSX.Element{
     const filteredQuestions = quiz.questionList.filter(
         (q: Question): boolean =>
             (quiz.published && q.published) || !quiz.published
@@ -29,7 +34,7 @@ export const QuizExpanded = ({
     };
 
     const totalPoints = filteredQuestions.reduce(
-        (prev: number, q: Question): number => prev + q.p,
+        (prev: number, q: Question): number => prev + q.points,
         0
     );
 
@@ -52,8 +57,7 @@ export const QuizExpanded = ({
     const editQuestionSub = (questionId: number, sub: string) => {
         editQuiz(quiz.id, {
             ...quiz,
-            questionList: quiz.questionList.map(
-            )
+            questionList: quiz.questionList.map((question) => questionId === question.id ? {...question, submission: sub} : {...question})
         });
     };
 
@@ -81,7 +85,7 @@ export const QuizExpanded = ({
                     <Button
                         className="esc_button text-align-center"
                         variant="danger"
-                        onClick={resetView}
+                        onClick={resetQuizView}
                     >
                         {"Exit"}
                     </Button>
@@ -92,9 +96,9 @@ export const QuizExpanded = ({
                 <QuizQuestion
                     key={quiz.id + "|" + q.id}
                     index={index}
-                    question="q"
+                    question={q}
                     submitted={submitArr[index]}
-                    handleSubmit={handleQuestionSubmit}
+                    handleQuestionSubmit={handleQuestionSubmit}
                     addPoints={addPoints}
                     editQuestionSub={editQuestionSub}
                 ></QuizQuestion>
